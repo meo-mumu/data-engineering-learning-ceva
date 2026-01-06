@@ -1,0 +1,281 @@
+{
+  "bu_name": "Companion Animals",
+  "last_updated": "2024-12-15T10:30:00Z",
+  "products": [
+    {
+      "sku": "COMP-VAC-001",
+      "name": "Canigen DHP",
+      "category": "vaccine",
+      "target_species": [
+        "dog"
+      ],
+      "form": "injectable",
+      "dose_ml": 1.0,
+      "storage_requirements": {
+        "min_temp_c": 2,
+        "max_temp_c": 8,
+        "light_sensitive": true
+      }
+    },
+    {
+      "sku": "COMP-VAC-002",
+      "name": "Canigen L",
+      "category": "vaccine",
+      "target_species": [
+        "dog"
+      ],
+      "form": "injectable",
+      "dose_ml": 1.0,
+      "storage_requirements": {
+        "min_temp_c": 2,
+        "max_temp_c": 8,
+        "light_sensitive": true
+      }
+    },
+    {
+      "sku": "COMP-VAC-003",
+      "name": "Feligen CRP",
+      "category": "vaccine",
+      "target_species": [
+        "cat"
+      ],
+      "form": "injectable",
+      "dose_ml": 1.0,
+      "storage_requirements": {
+        "min_temp_c": 2,
+        "max_temp_c": 8,
+        "light_sensitive": true
+      }
+    },
+    {
+      "sku": "COMP-VAC-004",
+      "name": "Purevax RCP",
+      "category": "vaccine",
+      "target_species": [
+        "cat"
+      ],
+      "form": "injectable",
+      "dose_ml": 1.0,
+      "storage_requirements": {
+        "min_temp_c": 2,
+        "max_temp_c": 8,
+        "light_sensitive": true
+      }
+    },
+    {
+      "sku": "COMP-PARA-001",
+      "name": "Vectra 3D",
+      "category": "antiparasitic",
+      "target_species": [
+        "dog"
+      ],
+      "form": "spot-on",
+      "dose_ml": 2.5,
+      "storage_requirements": {
+        "min_temp_c": 15,
+        "max_temp_c": 25,
+        "light_sensitive": false
+      }
+    },
+    {
+      "sku": "COMP-PARA-002",
+      "name": "Broadline",
+      "category": "antiparasitic",
+      "target_species": [
+        "cat"
+      ],
+      "form": "spot-on",
+      "dose_ml": 0.9,
+      "storage_requirements": {
+        "min_temp_c": 15,
+        "max_temp_c": 25,
+        "light_sensitive": false
+      }
+    },
+    {
+      "sku": "COMP-PARA-003",
+      "name": "Milbemax",
+      "category": "antiparasitic",
+      "target_species": [
+        "dog",
+        "cat"
+      ],
+      "form": "tablet",
+      "dose_ml": null,
+      "storage_requirements": {
+        "min_temp_c": 15,
+        "max_temp_c": 25,
+        "light_sensitive": false
+      }
+    },
+    {
+      "sku": "COMP-DENT-001",
+      "name": "Orozyme Gel",
+      "category": "dental",
+      "target_species": [
+        "dog",
+        "cat"
+      ],
+      "form": "gel",
+      "dose_ml": 70.0,
+      "storage_requirements": {
+        "min_temp_c": 5,
+        "max_temp_c": 25,
+        "light_sensitive": false
+      }
+    },
+    {
+      "sku": "COMP-DENT-002",
+      "name": "Plaque Off",
+      "category": "dental",
+      "target_species": [
+        "dog",
+        "cat"
+      ],
+      "form": "powder",
+      "dose_ml": null,
+      "storage_requirements": {
+        "min_temp_c": 15,
+        "max_temp_c": 25,
+        "light_sensitive": false
+      }
+    },
+    {
+      "sku": "COMP-HYGI-001",
+      "name": "Douxo S3 Calm",
+      "category": "hygiene",
+      "target_species": [
+        "dog"
+      ],
+      "form": "shampoo",
+      "dose_ml": 200.0,
+      "storage_requirements": {
+        "min_temp_c": 5,
+        "max_temp_c": 30,
+        "light_sensitive": false
+      }
+    }
+  ],
+  "recent_batches": [
+    {
+      "batch_id": "COMP-2024-10100",
+      "product_sku": "COMP-DENT-002",
+      "produced_at": "2024-12-02",
+      "quantity_units": 5612,
+      "status": "in_transit",
+      "destination_market": "EU"
+    },
+    {
+      "batch_id": "COMP-2024-10101",
+      "product_sku": "COMP-VAC-001",
+      "produced_at": "2024-11-10",
+      "quantity_units": 5460,
+      "status": "released",
+      "destination_market": "APAC"
+    },
+    {
+      "batch_id": "COMP-2024-10102",
+      "product_sku": "COMP-PARA-001",
+      "produced_at": "2024-12-04",
+      "quantity_units": 2126,
+      "status": "in_transit",
+      "destination_market": "LATAM"
+    },
+    {
+      "batch_id": "COMP-2024-10103",
+      "product_sku": "COMP-VAC-003",
+      "produced_at": "2024-11-13",
+      "quantity_units": 10725,
+      "status": "distributed",
+      "destination_market": "US"
+    },
+    {
+      "batch_id": "COMP-2024-10104",
+      "product_sku": "COMP-DENT-002",
+      "produced_at": "2024-12-03",
+      "quantity_units": 8505,
+      "status": "distributed",
+      "destination_market": "EU"
+    },
+    {
+      "batch_id": "COMP-2024-10105",
+      "product_sku": "COMP-PARA-003",
+      "produced_at": "2024-11-15",
+      "quantity_units": 3275,
+      "status": "in_transit",
+      "destination_market": "LATAM"
+    },
+    {
+      "batch_id": "COMP-2024-10106",
+      "product_sku": "COMP-HYGI-001",
+      "produced_at": "2024-12-23",
+      "quantity_units": 12488,
+      "status": "in_transit",
+      "destination_market": "APAC"
+    },
+    {
+      "batch_id": "COMP-2024-10107",
+      "product_sku": "COMP-VAC-002",
+      "produced_at": "2024-12-01",
+      "quantity_units": 7321,
+      "status": "released",
+      "destination_market": "LATAM"
+    },
+    {
+      "batch_id": "COMP-2024-10108",
+      "product_sku": "COMP-PARA-002",
+      "produced_at": "2024-11-14",
+      "quantity_units": 3734,
+      "status": "released",
+      "destination_market": "LATAM"
+    },
+    {
+      "batch_id": "COMP-2024-10109",
+      "product_sku": "COMP-HYGI-001",
+      "produced_at": "2024-12-17",
+      "quantity_units": 3288,
+      "status": "in_transit",
+      "destination_market": "APAC"
+    },
+    {
+      "batch_id": "COMP-2024-10110",
+      "product_sku": "COMP-PARA-002",
+      "produced_at": "2024-11-11",
+      "quantity_units": 14765,
+      "status": "released",
+      "destination_market": "EU"
+    },
+    {
+      "batch_id": "COMP-2024-10111",
+      "product_sku": "COMP-DENT-002",
+      "produced_at": "2024-11-17",
+      "quantity_units": 10355,
+      "status": "released",
+      "destination_market": "APAC"
+    },
+    {
+      "batch_id": "COMP-2024-10112",
+      "product_sku": "COMP-PARA-002",
+      "produced_at": "2024-11-08",
+      "quantity_units": 3684,
+      "status": "released",
+      "destination_market": "APAC"
+    },
+    {
+      "batch_id": "COMP-2024-10113",
+      "product_sku": "COMP-VAC-004",
+      "produced_at": "2024-11-20",
+      "quantity_units": 4504,
+      "status": "distributed",
+      "destination_market": "EU"
+    },
+    {
+      "batch_id": "COMP-2024-10114",
+      "product_sku": "COMP-VAC-003",
+      "produced_at": "2024-12-15",
+      "quantity_units": 14360,
+      "status": "distributed",
+      "destination_market": "LATAM"
+    }
+  ]
+}

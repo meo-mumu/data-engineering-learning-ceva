@@ -1,0 +1,316 @@
+semantic_layer:
+  database: star_schema
+  description: CEVA Animal Health production data lakehouse
+
+  tables:
+    dim_product:
+      description: Product catalog across all business units
+      business_purpose: Contains pharmaceutical products (vaccines, antiparasitics, antibiotics) for animal health
+      columns:
+        product_sk:
+          type: integer
+          description: Surrogate key for product dimension
+          primary_key: true
+        product_code:
+          type: string
+          description: Business key - unique product identifier
+          business_key: true
+        product_name:
+          type: string
+          description: Commercial product name
+        therapeutic_class:
+          type: string
+          description: Pharmaceutical class (vaccine, antiparasitic, antibiotic, anti-inflammatory)
+          nullable: true
+        category:
+          type: string
+          description: Product category (vaccine, antiparasitic, dental, hygiene)
+          nullable: true
+        form:
+          type: string
+          description: Pharmaceutical form (injectable, oral_solution, bolus, pour-on, tablet, gel, powder)
+          nullable: true
+        temp_min_c:
+          type: integer
+          description: Minimum storage temperature in Celsius
+          nullable: true
+        temp_max_c:
+          type: integer
+          description: Maximum storage temperature in Celsius
+          nullable: true
+        light_sensitive:
+          type: boolean
+          description: Product requires protection from light
+          nullable: true
+        dose_ml:
+          type: float
+          description: Dose volume in milliliters
+          nullable: true
+        unit_volume_ml:
+          type: float
+          description: Unit volume in milliliters
+          nullable: true
+        bu_source:
+          type: string
+          description: Source business unit (poultry, ruminants, companion)
+
+    dim_specie:
+      description: Target animal species dimension
+      business_purpose: Reference table for all animal species targeted by CEVA products
+      columns:
+        specie_sk:
+          type: integer
+          description: Surrogate key for species dimension
+          primary_key: true
+        specie_code:
+          type: string
+          description: Species code (chicken, turkey, duck, bovine, ovine, caprine, dog, cat)
+          business_key: true
+        specie_name:
+          type: string
+          description: Species display name
+        animal_type:
+          type: string
+          description: Animal category (poultry, ruminant, companion)
+        bu_source:
+          type: string
+          description: Source business unit
+
+    dim_site:
+      description: Production site dimension
+      business_purpose: Manufacturing sites across CEVA global network
+      columns:
+        site_sk:
+          type: integer
+          description: Surrogate key for site dimension
+          primary_key: true
+        site_code:
+          type: string
+          description: Site identifier (e.g., LIBOURNE-FR, BUDAPEST-HU)
+          business_key: true
+        country:
+          type: string
+          description: ISO country code
+        region:
+          type: string
+          description: Geographic region (Europe, North America, Asia)
+        bu_source:
+          type: string
+          description: Source business unit
+
+    fact_batch_production:
+      description: Batch production fact table
+      business_purpose: Granular production data at batch/lot level across all BUs
+      grain: One row per batch/lot
+      columns:
+        batch_production_sk:
+          type: integer
+          description: Surrogate key for batch production
+          primary_key: true
+        batch_id:
+          type: string
+          description: Business key - unique batch/lot identifier
+          business_key: true
+        product_fk:
+          type: integer
+          description: Foreign key to dim_product
+          foreign_key: dim_product.product_sk
+        site_fk:
+          type: integer
+          description: Foreign key to dim_site (NULL for companion batches)
+          foreign_key: dim_site.site_sk
+          nullable: true
+        production_date:
+          type: date
+          description: Manufacturing/production date
+        expiry_date:
+          type: date
+          description: Product expiration date
+          nullable: true
+        release_date:
+          type: date
+          description: QC release date
+          nullable: true
+        quantity_doses:
+          type: integer
+          description: Quantity in doses (poultry only)
+          nullable: true
+        quantity_units:
+          type: integer
+          description: Quantity in units (ruminants and companion)
+          nullable: true
+        batch_status:
+          type: string
+          description: Batch status (released, pending, rejected, in_production, qc_testing, quarantine, in_transit, distributed)
+        gmp_deviation:
+          type: boolean
+          description: GMP deviation flag (ruminants only)
+          nullable: true
+        destination_market:
+          type: string
+          description: Destination market (EU, US, APAC, LATAM) - companion only
+          nullable: true
+        bu_source:
+          type: string
+          description: Source business unit (poultry, ruminants, companion)
+        targeted_species:
+          type: array<integer>
+          description: Array of foreign keys to dim_specie
+
+  metrics:
+    total_batches:
+      description: Total number of production batches
+      sql: COUNT(*)
+
+    total_doses:
+      description: Total doses produced (poultry)
+      sql: SUM(quantity_doses)
+
+    total_units:
+      description: Total units produced (ruminants and companion)
+      sql: SUM(quantity_units)
+
+  question_examples:
+    - question: "How many batches were produced by each business unit?"
+      intent: production_volume_by_bu
+      sql: |
+        SELECT
+            bu_source,
+            COUNT(*) as batch_count,
+            SUM(quantity_doses) as total_doses,
+            SUM(quantity_units) as total_units
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        GROUP BY bu_source
+        ORDER BY bu_source
+      view_type: table
+
+    - question: "Which production sites are the most active?"
+      intent: production_by_site
+      sql: |
+        SELECT
+            s.site_code,
+            s.country,
+            s.region,
+            COUNT(*) as batch_count,
+            SUM(f.quantity_doses) as total_doses,
+            SUM(f.quantity_units) as total_units
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
+        LEFT JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_site.parquet') s ON f.site_fk = s.site_sk
+        WHERE s.site_code IS NOT NULL
+        GROUP BY s.site_code, s.country, s.region
+        ORDER BY batch_count DESC
+      view_type: chart
+
+    - question: "What is the distribution of batches by therapeutic class?"
+      intent: therapeutic_class_distribution
+      sql: |
+        SELECT
+            p.therapeutic_class,
+            COUNT(DISTINCT f.batch_id) as batch_count,
+            COUNT(DISTINCT p.product_code) as product_count
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
+        WHERE p.therapeutic_class IS NOT NULL
+        GROUP BY p.therapeutic_class
+        ORDER BY batch_count DESC
+      view_type: chart
+
+    - question: "Show me batch status distribution by business unit"
+      intent: batch_status_by_bu
+      sql: |
+        SELECT
+            batch_status,
+            bu_source,
+            COUNT(*) as batch_count
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        GROUP BY batch_status, bu_source
+        ORDER BY bu_source, batch_count DESC
+      view_type: table
+
+    - question: "Which animal species have the most production batches?"
+      intent: production_by_species
+      sql: |
+        SELECT
+            s.specie_name,
+            s.animal_type,
+            COUNT(DISTINCT f.batch_id) as batch_count,
+            COUNT(DISTINCT p.product_code) as product_count
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
+        CROSS JOIN UNNEST(f.targeted_species) AS t(specie_fk)
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_specie.parquet') s ON t.specie_fk = s.specie_sk
+        GROUP BY s.specie_name, s.animal_type
+        ORDER BY batch_count DESC
+      view_type: chart
+
+    - question: "List all products for dogs"
+      intent: products_by_species
+      sql: |
+        SELECT DISTINCT
+            p.product_name,
+            p.category,
+            p.form,
+            p.therapeutic_class
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f ON p.product_sk = f.product_fk
+        CROSS JOIN UNNEST(f.targeted_species) AS t(specie_fk)
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_specie.parquet') s ON t.specie_fk = s.specie_sk
+        WHERE s.specie_code = 'dog'
+        ORDER BY p.product_name
+      view_type: table
+
+    - question: "What are the latest production batches?"
+      intent: recent_production
+      sql: |
+        SELECT
+            f.batch_id,
+            p.product_name,
+            f.production_date,
+            f.batch_status,
+            s.site_code,
+            f.bu_source
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
+        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
+        LEFT JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_site.parquet') s ON f.site_fk = s.site_sk
+        ORDER BY f.production_date DESC
+        LIMIT 20
+      view_type: table
+
+    - question: "Show production volume by month"
+      intent: production_timeline
+      sql: |
+        SELECT
+            strftime(production_date, '%Y-%m') as month,
+            bu_source,
+            COUNT(*) as batch_count,
+            SUM(quantity_doses) as total_doses,
+            SUM(quantity_units) as total_units
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        GROUP BY month, bu_source
+        ORDER BY month, bu_source
+      view_type: chart
+
+    - question: "Which products require cold storage?"
+      intent: cold_storage_products
+      sql: |
+        SELECT
+            product_name,
+            temp_min_c,
+            temp_max_c,
+            light_sensitive,
+            bu_source
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet')
+        WHERE temp_max_c <= 8
+        ORDER BY temp_min_c
+      view_type: table
+
+    - question: "How many batches have GMP deviations?"
+      intent: quality_issues
+      sql: |
+        SELECT
+            COUNT(*) as total_batches,
+            SUM(CASE WHEN gmp_deviation = true THEN 1 ELSE 0 END) as batches_with_deviation,
+            ROUND(100.0 * SUM(CASE WHEN gmp_deviation = true THEN 1 ELSE 0 END) / COUNT(*), 2) as deviation_rate_pct
+        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        WHERE gmp_deviation IS NOT NULL
+      view_type: table

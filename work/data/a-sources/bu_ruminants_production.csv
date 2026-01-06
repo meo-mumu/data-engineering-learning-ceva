@@ -1,0 +1,101 @@
+lot_number,product_ref,product_label,therapeutic_class,target_species,form,unit_volume_ml,quantity_units,manufacturing_date,expiration_date,production_site,batch_status,gmp_deviation
+RUM-202409-3088,AB-RUM-001,Shotapen,antibiotic,ovine,injectable,50.0,1820,2024-09-05,2027-02-22,ALGETE-ES,in_production,False
+RUM-202411-7658,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,50.0,1550,2024-11-04,2027-03-24,LENEXA-US,quarantine,False
+RUM-202403-7745,VAC-RUM-001,Bovilis BVD,vaccine,ovine,injectable,50.0,1404,2024-03-24,2026-08-11,ALGETE-ES,released,False
+RUM-202407-8711,VAC-RUM-002,Coglavax,vaccine,ovine,injectable,100.0,2600,2024-07-28,2026-07-18,LIBOURNE-FR,qc_testing,False
+RUM-202401-7528,VAC-RUM-004,Ovivac P Plus,vaccine,ovine,injectable,100.0,4273,2024-01-22,2026-04-11,LENEXA-US,qc_testing,False
+RUM-202409-2889,AB-RUM-002,Bovoxyl,antibiotic,bovine,injectable,250.0,988,2024-09-11,2026-09-01,ALGETE-ES,released,False
+RUM-202406-6139,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,250.0,4823,2024-06-24,2027-06-09,LIBOURNE-FR,released,False
+RUM-202401-1027,PARA-RUM-001,Cevazuril,antiparasitic,caprine,oral_solution,500.0,1714,2024-01-23,2026-07-11,LENEXA-US,released,False
+RUM-202402-6143,PARA-RUM-003,Eprinex,antiparasitic,caprine,pour-on,500.0,2633,2024-02-22,2026-07-11,ALGETE-ES,released,False
+RUM-202406-5844,PARA-RUM-003,Eprinex,antiparasitic,caprine,pour-on,500.0,1525,2024-06-13,2027-04-29,ALGETE-ES,released,False
+RUM-202405-1006,AB-RUM-001,Shotapen,antibiotic,ovine,injectable,100.0,3719,2024-05-13,2026-12-29,LENEXA-US,qc_testing,False
+RUM-202404-3780,AB-RUM-002,Bovoxyl,antibiotic,bovine,injectable,250.0,2024,2024-04-17,2026-11-03,ALGETE-ES,released,False
+RUM-202404-3414,PARA-RUM-001,Cevazuril,antiparasitic,caprine,oral_solution,250.0,696,2024-04-26,2026-07-15,LENEXA-US,in_production,False
+RUM-202411-7291,PARA-RUM-003,Eprinex,antiparasitic,bovine,pour-on,250.0,3582,2024-11-19,2027-02-07,LIBOURNE-FR,released,False
+RUM-202412-1822,VAC-RUM-003,Bovilis IBR,vaccine,ovine,injectable,50.0,1192,2024-12-17,2027-07-05,LENEXA-US,released,False
+RUM-202409-6198,AB-RUM-002,Bovoxyl,antibiotic,caprine,injectable,250.0,3752,2024-09-18,2027-06-05,LIBOURNE-FR,quarantine,False
+RUM-202408-5050,AB-RUM-003,Rilexine,antibiotic,caprine,bolus,10.0,2059,2024-08-15,2026-12-03,LENEXA-US,released,False
+RUM-202402-4841,PARA-RUM-004,Supaverm,antiparasitic,bovine,pour-on,500.0,1335,2024-02-23,2026-06-12,LIBOURNE-FR,qc_testing,False
+RUM-202412-4505,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,500.0,610,2024-12-05,2027-10-21,LIBOURNE-FR,in_production,False
+RUM-202407-1320,AI-RUM-002,Metacam,anti-inflammatory,ovine,oral_solution,250.0,148,2024-07-13,2027-06-28,LENEXA-US,released,False
+RUM-202407-9818,PARA-RUM-001,Cevazuril,antiparasitic,bovine,oral_solution,500.0,4099,2024-07-28,2027-01-14,LIBOURNE-FR,released,False
+RUM-202407-7371,PARA-RUM-001,Cevazuril,antiparasitic,caprine,oral_solution,250.0,1452,2024-07-16,2026-07-06,LENEXA-US,qc_testing,False
+RUM-202410-7455,VAC-RUM-003,Bovilis IBR,vaccine,caprine,injectable,50.0,3611,2024-10-18,2026-10-08,LIBOURNE-FR,released,False
+RUM-202408-5262,AI-RUM-002,Metacam,anti-inflammatory,ovine,oral_solution,250.0,3205,2024-08-06,2026-07-27,LENEXA-US,released,False
+RUM-202407-8705,AI-RUM-001,Finadyne,anti-inflammatory,bovine,injectable,100.0,662,2024-07-09,2026-07-29,ALGETE-ES,in_production,False
+RUM-202401-1333,VAC-RUM-001,Bovilis BVD,vaccine,caprine,injectable,100.0,1037,2024-01-08,2026-03-28,ALGETE-ES,released,False
+RUM-202408-7043,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,50.0,2648,2024-08-23,2026-12-11,LIBOURNE-FR,qc_testing,False
+RUM-202401-7149,AB-RUM-001,Shotapen,antibiotic,caprine,injectable,50.0,2089,2024-01-10,2026-09-26,LIBOURNE-FR,released,False
+RUM-202405-2983,AB-RUM-003,Rilexine,antibiotic,ovine,bolus,10.0,4464,2024-05-28,2027-03-14,LENEXA-US,released,False
+RUM-202406-6590,AB-RUM-002,Bovoxyl,antibiotic,bovine,injectable,250.0,3651,2024-06-03,2027-01-19,LENEXA-US,in_production,False
+RUM-202408-8135,AB-RUM-002,Bovoxyl,antibiotic,caprine,injectable,250.0,4508,2024-08-23,2026-10-12,LENEXA-US,qc_testing,False
+RUM-202407-5397,PARA-RUM-004,Supaverm,antiparasitic,ovine,pour-on,500.0,3792,2024-07-27,2027-06-12,LIBOURNE-FR,qc_testing,False
+RUM-202408-7209,AI-RUM-001,Finadyne,anti-inflammatory,bovine,injectable,100.0,4094,2024-08-19,2027-05-06,LIBOURNE-FR,qc_testing,False
+RUM-202405-5526,PARA-RUM-002,Vecoxan,antiparasitic,bovine,oral_solution,250.0,2077,2024-05-11,2026-08-29,ALGETE-ES,released,False
+RUM-202408-4937,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,500.0,241,2024-08-18,2027-08-03,LIBOURNE-FR,released,False
+RUM-202404-4986,PARA-RUM-001,Cevazuril,antiparasitic,caprine,oral_solution,250.0,4449,2024-04-13,2027-02-27,LENEXA-US,qc_testing,False
+RUM-202412-6764,PARA-RUM-003,Eprinex,antiparasitic,bovine,pour-on,500.0,1088,2024-12-18,2027-05-07,ALGETE-ES,released,False
+RUM-202406-9779,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,50.0,4066,2024-06-04,2027-04-20,LENEXA-US,quarantine,False
+RUM-202410-5636,AB-RUM-003,Rilexine,antibiotic,bovine,bolus,10.0,3056,2024-10-25,2027-06-12,LIBOURNE-FR,quarantine,False
+RUM-202401-3073,PARA-RUM-001,Cevazuril,antiparasitic,ovine,oral_solution,500.0,1134,2024-01-23,2026-09-09,ALGETE-ES,qc_testing,False
+RUM-202408-5658,AI-RUM-002,Metacam,anti-inflammatory,bovine,oral_solution,100.0,2168,2024-08-04,2026-07-25,LENEXA-US,released,False
+RUM-202402-2213,VAC-RUM-002,Coglavax,vaccine,bovine,injectable,50.0,4710,2024-02-13,2026-08-31,LENEXA-US,released,False
+RUM-202404-7818,VAC-RUM-002,Coglavax,vaccine,caprine,injectable,50.0,3216,2024-04-04,2026-11-20,LENEXA-US,released,False
+RUM-202405-8025,PARA-RUM-004,Supaverm,antiparasitic,bovine,pour-on,500.0,1828,2024-05-28,2027-02-12,LENEXA-US,qc_testing,False
+RUM-202402-3847,AB-RUM-002,Bovoxyl,antibiotic,ovine,injectable,250.0,4964,2024-02-06,2026-04-26,LENEXA-US,released,False
+RUM-202401-5632,PARA-RUM-001,Cevazuril,antiparasitic,bovine,oral_solution,500.0,2267,2024-01-08,2026-04-27,ALGETE-ES,released,False
+RUM-202411-7965,AB-RUM-001,Shotapen,antibiotic,ovine,injectable,50.0,1265,2024-11-26,2027-02-14,LIBOURNE-FR,in_production,False
+RUM-202403-5728,VAC-RUM-001,Bovilis BVD,vaccine,caprine,injectable,100.0,3397,2024-03-26,2026-07-14,LENEXA-US,released,False
+RUM-202409-2317,PARA-RUM-005,Cevamec,antiparasitic,ovine,injectable,250.0,2151,2024-09-16,2027-04-04,LIBOURNE-FR,released,False
+RUM-202404-1339,VAC-RUM-002,Coglavax,vaccine,caprine,injectable,100.0,429,2024-04-22,2027-01-07,LIBOURNE-FR,quarantine,False
+RUM-202409-5557,PARA-RUM-004,Supaverm,antiparasitic,bovine,pour-on,500.0,3950,2024-09-21,2027-04-09,LENEXA-US,qc_testing,False
+RUM-202406-2713,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,500.0,3380,2024-06-11,2027-03-28,ALGETE-ES,released,False
+RUM-202408-5135,VAC-RUM-001,Bovilis BVD,vaccine,caprine,injectable,100.0,109,2024-08-03,2026-12-21,ALGETE-ES,qc_testing,False
+RUM-202409-1888,AI-RUM-002,Metacam,anti-inflammatory,caprine,oral_solution,250.0,3721,2024-09-15,2027-03-04,LIBOURNE-FR,qc_testing,False
+RUM-202405-5719,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,50.0,2060,2024-05-18,2026-07-07,ALGETE-ES,released,False
+RUM-202405-7684,VAC-RUM-003,Bovilis IBR,vaccine,ovine,injectable,50.0,1062,2024-05-18,2026-05-08,ALGETE-ES,in_production,False
+RUM-202403-5781,AI-RUM-002,Metacam,anti-inflammatory,ovine,oral_solution,250.0,2096,2024-03-16,2027-01-30,LENEXA-US,released,False
+RUM-202403-9327,PARA-RUM-005,Cevamec,antiparasitic,ovine,injectable,50.0,3499,2024-03-13,2026-06-01,LENEXA-US,released,False
+RUM-202409-5634,AI-RUM-001,Finadyne,anti-inflammatory,caprine,injectable,250.0,4111,2024-09-09,2026-08-30,LIBOURNE-FR,released,False
+RUM-202409-6446,PARA-RUM-004,Supaverm,antiparasitic,ovine,pour-on,500.0,1645,2024-09-16,2027-02-03,ALGETE-ES,released,False
+RUM-202410-7730,VAC-RUM-004,Ovivac P Plus,vaccine,ovine,injectable,100.0,1346,2024-10-13,2027-01-01,LENEXA-US,in_production,False
+RUM-202403-6439,VAC-RUM-001,Bovilis BVD,vaccine,bovine,injectable,100.0,4408,2024-03-17,2026-12-02,LENEXA-US,released,False
+RUM-202412-3529,VAC-RUM-001,Bovilis BVD,vaccine,ovine,injectable,100.0,3356,2024-12-05,2027-05-24,ALGETE-ES,in_production,False
+RUM-202406-9742,VAC-RUM-002,Coglavax,vaccine,caprine,injectable,100.0,394,2024-06-28,2027-04-14,ALGETE-ES,released,False
+RUM-202404-5708,VAC-RUM-002,Coglavax,vaccine,bovine,injectable,100.0,923,2024-04-21,2027-02-05,LENEXA-US,quarantine,False
+RUM-202412-1753,VAC-RUM-003,Bovilis IBR,vaccine,ovine,injectable,100.0,3628,2024-12-10,2026-11-30,LIBOURNE-FR,qc_testing,False
+RUM-202409-3950,VAC-RUM-004,Ovivac P Plus,vaccine,caprine,injectable,100.0,2072,2024-09-14,2027-06-01,LENEXA-US,qc_testing,False
+RUM-202403-5161,AB-RUM-001,Shotapen,antibiotic,ovine,injectable,100.0,4577,2024-03-08,2026-09-24,LIBOURNE-FR,released,False
+RUM-202408-5901,VAC-RUM-002,Coglavax,vaccine,ovine,injectable,100.0,2574,2024-08-12,2027-04-29,LIBOURNE-FR,released,False
+RUM-202408-7248,PARA-RUM-003,Eprinex,antiparasitic,bovine,pour-on,500.0,3342,2024-08-04,2026-10-23,LENEXA-US,released,False
+RUM-202410-1803,VAC-RUM-001,Bovilis BVD,vaccine,bovine,injectable,100.0,2986,2024-10-28,2027-08-14,LIBOURNE-FR,released,False
+RUM-202404-3240,AB-RUM-002,Bovoxyl,antibiotic,ovine,injectable,100.0,3711,2024-04-20,2026-08-08,LIBOURNE-FR,released,False
+RUM-202406-2476,AB-RUM-001,Shotapen,antibiotic,bovine,injectable,100.0,1744,2024-06-24,2026-08-13,LIBOURNE-FR,released,False
+RUM-202409-9221,AI-RUM-001,Finadyne,anti-inflammatory,ovine,injectable,100.0,2517,2024-09-12,2027-04-30,ALGETE-ES,released,False
+RUM-202406-8673,AI-RUM-002,Metacam,anti-inflammatory,caprine,oral_solution,100.0,3355,2024-06-26,2026-07-16,ALGETE-ES,quarantine,False
+RUM-202402-1228,PARA-RUM-002,Vecoxan,antiparasitic,caprine,oral_solution,500.0,2247,2024-02-26,2026-08-14,ALGETE-ES,qc_testing,False
+RUM-202411-4830,PARA-RUM-003,Eprinex,antiparasitic,caprine,pour-on,500.0,1913,2024-11-12,2026-12-02,ALGETE-ES,released,False
+RUM-202411-5951,VAC-RUM-002,Coglavax,vaccine,bovine,injectable,50.0,2593,2024-11-27,2027-06-15,LENEXA-US,released,False
+RUM-202402-3222,VAC-RUM-002,Coglavax,vaccine,caprine,injectable,100.0,1365,2024-02-08,2026-09-25,LENEXA-US,released,False
+RUM-202402-7686,AB-RUM-002,Bovoxyl,antibiotic,bovine,injectable,250.0,3732,2024-02-27,2026-09-14,LENEXA-US,released,False
+RUM-202406-7018,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,100.0,3361,2024-06-04,2027-03-21,LENEXA-US,released,False
+RUM-202402-2501,VAC-RUM-004,Ovivac P Plus,vaccine,bovine,injectable,50.0,2832,2024-02-28,2026-09-15,LIBOURNE-FR,released,False
+RUM-202410-4394,VAC-RUM-003,Bovilis IBR,vaccine,ovine,injectable,50.0,1308,2024-10-07,2026-10-27,ALGETE-ES,released,False
+RUM-202405-3129,VAC-RUM-001,Bovilis BVD,vaccine,caprine,injectable,50.0,311,2024-05-28,2026-07-17,LIBOURNE-FR,released,False
+RUM-202406-4898,VAC-RUM-001,Bovilis BVD,vaccine,bovine,injectable,100.0,1138,2024-06-26,2027-06-11,ALGETE-ES,released,True
+RUM-202409-2041,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,250.0,4227,2024-09-04,2027-07-21,LIBOURNE-FR,released,False
+RUM-202401-9543,AB-RUM-001,Shotapen,antibiotic,bovine,injectable,50.0,4023,2024-01-24,2027-01-08,LENEXA-US,qc_testing,False
+RUM-202411-8267,PARA-RUM-003,Eprinex,antiparasitic,bovine,pour-on,250.0,1133,2024-11-04,2027-05-23,LENEXA-US,in_production,False
+RUM-202411-6327,AB-RUM-001,Shotapen,antibiotic,ovine,injectable,100.0,4241,2024-11-19,2027-07-07,ALGETE-ES,released,False
+RUM-202402-2874,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,250.0,3799,2024-02-26,2027-01-11,LIBOURNE-FR,released,False
+RUM-202406-7532,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,500.0,2188,2024-06-27,2027-01-13,LENEXA-US,released,False
+RUM-202411-2494,VAC-RUM-003,Bovilis IBR,vaccine,caprine,injectable,50.0,3152,2024-11-16,2026-12-06,LIBOURNE-FR,released,False
+RUM-202401-6400,PARA-RUM-005,Cevamec,antiparasitic,ovine,injectable,250.0,521,2024-01-19,2026-09-05,LENEXA-US,released,False
+RUM-202405-9313,AB-RUM-001,Shotapen,antibiotic,bovine,injectable,50.0,2968,2024-05-12,2026-06-01,ALGETE-ES,qc_testing,False
+RUM-202402-4705,PARA-RUM-002,Vecoxan,antiparasitic,caprine,oral_solution,250.0,2290,2024-02-25,2026-06-14,LIBOURNE-FR,released,False
+RUM-202405-6062,VAC-RUM-003,Bovilis IBR,vaccine,bovine,injectable,50.0,4739,2024-05-23,2027-05-08,ALGETE-ES,released,False
+RUM-202402-1502,PARA-RUM-003,Eprinex,antiparasitic,ovine,pour-on,500.0,3816,2024-02-05,2026-12-21,LENEXA-US,in_production,False
+RUM-202406-6314,VAC-RUM-003,Bovilis IBR,vaccine,bovine,injectable,50.0,1374,2024-06-10,2027-04-26,LIBOURNE-FR,released,False
+RUM-202410-2336,AI-RUM-001,Finadyne,anti-inflammatory,caprine,injectable,100.0,3721,2024-10-02,2027-07-19,LENEXA-US,qc_testing,False
+RUM-202404-2864,PARA-RUM-001,Cevazuril,antiparasitic,caprine,oral_solution,500.0,4958,2024-04-25,2026-12-11,LENEXA-US,qc_testing,False
