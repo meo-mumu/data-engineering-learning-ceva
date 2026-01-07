@@ -18,8 +18,7 @@ from nodes import (
     create_generate_sql_node,
     validate_sql,
     execute_sql,
-    select_visualization,
-    generate_streamlit,
+    generate_streamlit_views,
 )
 
 
@@ -74,9 +73,10 @@ def check_sql_validity(state: AgentState) -> Literal["valid", "invalid"]:
     return "valid" if state.get("sql_valid", False) else "invalid"
 
 
-# 4. main function
-def main():
-    # Load specifications and semantic layer once
+# 4. Build and run functions
+def build_agent():
+    """Build and compile the LangGraph agent (called once)"""
+    # Load specifications and semantic layer
     print("📖 Loading agent specifications and semantic layer...")
     agent_specs = load_agent_specifications()
     semantic_layer = load_semantic_layer()
@@ -103,8 +103,7 @@ def main():
     workflow.add_node("generate_sql", generate_sql_node)
     workflow.add_node("validate_sql", validate_sql)
     workflow.add_node("execute_sql", execute_sql)
-    workflow.add_node("select_visualization", select_visualization)
-    workflow.add_node("generate_streamlit", generate_streamlit)
+    workflow.add_node("generate_streamlit_views", generate_streamlit_views)
 
     # Define the flow with conditional edges
     workflow.add_edge(START, "generate_sql")
@@ -120,16 +119,28 @@ def main():
         }
     )
 
-    workflow.add_edge("execute_sql", "select_visualization")
-    workflow.add_edge("select_visualization", "generate_streamlit")
-    workflow.add_edge("generate_streamlit", END)
+    workflow.add_edge("execute_sql", "generate_streamlit_views")
+    workflow.add_edge("generate_streamlit_views", END)
 
-    # Compile the graph
-    app = workflow.compile()
+    # Compile and return the graph
+    return workflow.compile()
 
-    # Test the graph with a simple question
+
+def run_agent(question: str, compiled_app=None):
+    """Run the agent with a question and return results
+
+    Args:
+        question: Natural language question
+        compiled_app: Pre-compiled LangGraph app (optional, will build if None)
+
+    Returns:
+        AgentState dict with query_results, result_columns, generated_sql, viz_type
+    """
+    if compiled_app is None:
+        compiled_app = build_agent()
+
     initial_state = {
-        "question": "How many batches were produced by each business unit?",
+        "question": question,
         "generated_sql": "",
         "sql_valid": False,
         "validation_error": "",
@@ -140,14 +151,27 @@ def main():
         "messages": [],
     }
 
-    print(f"\n🚀 Running agent with question: {initial_state['question']}\n")
+    return compiled_app.invoke(initial_state)
 
-    # Run the graph
-    result = app.invoke(initial_state)
+
+def main():
+    """CLI entry point for testing"""
+    # Build agent once
+    app = build_agent()
+
+    # Test with a simple question
+    question = "How many batches were produced by each business unit?"
+    print(f"\n🚀 Running agent with question: {question}\n")
+
+    # Run the agent
+    result = run_agent(question, app)
 
     print(f"\n✅ Agent completed!")
-    print(f"Generated SQL: {result.get('generated_sql', 'N/A')}")
-    print(f"Visualization type: {result.get('viz_type', 'N/A')}")
+    print(f"\nGenerated SQL:\n{result.get('generated_sql', 'N/A')}")
+    print(f"\nQuery Results:")
+    print(f"Columns: {result.get('result_columns', [])}")
+    print(f"Rows: {result.get('query_results', [])}")
+    print(f"\nVisualization type: {result.get('viz_type', 'N/A')}")
 
 
 if __name__ == "__main__":

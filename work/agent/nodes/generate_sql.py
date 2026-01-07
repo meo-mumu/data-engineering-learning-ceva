@@ -11,7 +11,35 @@ def create_generate_sql_node(llm, agent_specs: str, semantic_layer: str):
 
     def generate_sql(state: "AgentState") -> "AgentState":
         """Generate SQL query from natural language question"""
-        print("🔄 Generating SQL...")
+
+        # Check if this is a retry due to validation failure
+        validation_error = state.get("validation_error", "")
+        previous_sql = state.get("generated_sql", "")
+
+        if validation_error and previous_sql:
+            print(f"🔄 Regenerating SQL (fixing: {validation_error})...")
+        else:
+            print("🔄 Generating SQL...")
+
+        # Build prompt with validation feedback if retrying
+        error_feedback = ""
+        if validation_error and previous_sql:
+            error_feedback = f"""
+
+---
+
+# PREVIOUS ATTEMPT FAILED
+
+Your previous SQL query had this error:
+**{validation_error}**
+
+Previous SQL:
+```sql
+{previous_sql}
+```
+
+Please fix this error and generate a corrected SQL query.
+"""
 
         # Build simple prompt - let LLM understand the YAML directly
         prompt = f"""{agent_specs}
@@ -27,6 +55,7 @@ def create_generate_sql_node(llm, agent_specs: str, semantic_layer: str):
 # USER QUESTION
 
 {state["question"]}
+{error_feedback}
 
 ---
 

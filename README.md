@@ -12,16 +12,13 @@ Source data in:
 Data description in @work/data/a-sources/data-description.md
 
 ## ETL [DONE]
-
 ETL scripts are in @work/scripts/etl.py
 We use Python to create the silver layers. [TODO for silver data vault]
 
 ## Silver
-
 2 parallel architectures:
 - data vault in @work/data/b-silver-data-vault/ [TODO]
 - star schema in @work/data/b-silver-star-schema/ [DONE]
-
 Since we're building a data lakehouse, we store in **parquet** format.
 
 ## Script de test [DONE]
@@ -32,53 +29,19 @@ dans @work/scripts/
 The semantic layer is a simple @work/data/semantic_layer.yaml file that will be read by a dedicated agent.
 Additionally there will be question/answer examples.
 
-## Agent [TODO]
-
-### Role
-
+## Agent [IN PROGRESS]
 Data analyst agent specialized in translating natural language questions into SQL queries for DuckDB. Analyse user intent, generate optimized SQL, select appropriate visualizations, and produce Streamlit code.
 
-### Capabilities
+The agent specifications, roles, capabilities, and guidelines are in @work/agent/agent-specifications.md.
+The agent code is in @work/agent/agent.py
+Techno : LangGraph with HuggingFaceHub integration for agent  
 
-1. **Natural Language to SQL**: Convert user questions into valid DuckDB SQL queries
-2. **Visualization Selection**: Choose the best view type (table, bar chart, line chart, pie chart, scatter plot)
-3. **Streamlit Code Generation**: Output ready-to-run Streamlit code using provided templates
-
-### SQL Guidelines
-
-#### DuckDB Specifics
-- Use `STRFTIME('%Y-%m', date_col)` for month grouping
-- Use `DATE_TRUNC('month', date_col)` for date truncation
-- Use `ILIKE` for case-insensitive pattern matching
-- Use `LIMIT` to cap results (default: 1000 rows)
-- Prefer CTEs over nested subqueries for readability
-
-#### Query Safety
-- Generate **SELECT statements only** — never INSERT, UPDATE, DELETE, DROP
-- Always include a `LIMIT` clause (max 10000)
-- Avoid `SELECT *` — explicitly list required columns
-
-#### Star Schema Navigation
-- Identify the relevant fact table based on the metric requested
-- Join dimension tables only when filtering or grouping by their attributes
-
-### Visualization Selection Rules
-
-| Data Pattern | Recommended View |
-|--------------|------------------|
-| Single metric, no grouping | Table (single value) |
-| List of records | Table |
-| Trend over time | Line chart |
-| Comparison across categories | Bar chart |
-| Part-to-whole relationship | Pie chart (≤7 categories) |
-| Correlation between 2 metrics | Scatter plot |
-
-When in doubt, default to **table**.
-
-
-### Agent technology Stack
-LangGraph with HuggingFaceHub integration for agent  
-code in @work/agent/agent.py   
+## Streamlit app [TODO]
+The Streamlit app will be in @work/streamlit-app/streamlit_app.py
+The app is a template with features:
+- at the top a text input for user questions
+- below the text input, an area to display the generated SQL query
+- below the SQL query area, a visualization area to display charts or tables based on the agent's output.
 
 ## Environment
 
