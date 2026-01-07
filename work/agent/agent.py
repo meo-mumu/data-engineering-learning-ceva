@@ -18,7 +18,7 @@ from nodes import (
     create_generate_sql_node,
     validate_sql,
     execute_sql,
-    generate_streamlit_views,
+    create_generate_streamlit_views_node,
 )
 
 
@@ -31,7 +31,6 @@ class AgentState(TypedDict):
     validation_error: str
     query_results: list
     result_columns: list
-    viz_type: str
     streamlit_code: str
     messages: Annotated[list, add_messages]
 
@@ -67,6 +66,21 @@ def load_semantic_layer() -> str:
         return f.read()
 
 
+def load_visualization_guidelines() -> str:
+    """Load visualization guidelines from agent-specifications.md"""
+    with open(AGENT_SPECS_PATH, "r") as f:
+        content = f.read()
+
+    # Extract from "## Plotly Visualization Guidelines" to end of file
+    start_marker = "## Plotly Visualization Guidelines"
+    if start_marker in content:
+        viz_section = content.split(start_marker)[1]
+        # Include the marker in the returned content
+        return start_marker + viz_section
+    else:
+        return ""  # Fallback if section not found
+
+
 # 3. Conditional edge functions
 def check_sql_validity(state: AgentState) -> Literal["valid", "invalid"]:
     """Route based on SQL validation result"""
@@ -80,6 +94,7 @@ def build_agent():
     print("📖 Loading agent specifications and semantic layer...")
     agent_specs = load_agent_specifications()
     semantic_layer = load_semantic_layer()
+    viz_guidelines = load_visualization_guidelines()
     print("✅ Loaded successfully\n")
 
     # Initialize the LLM endpoint
@@ -98,12 +113,13 @@ def build_agent():
 
     # Create nodes with dependencies
     generate_sql_node = create_generate_sql_node(llm, agent_specs, semantic_layer)
+    generate_viz_node = create_generate_streamlit_views_node(llm, viz_guidelines)
 
     # Add nodes
     workflow.add_node("generate_sql", generate_sql_node)
     workflow.add_node("validate_sql", validate_sql)
     workflow.add_node("execute_sql", execute_sql)
-    workflow.add_node("generate_streamlit_views", generate_streamlit_views)
+    workflow.add_node("generate_streamlit_views", generate_viz_node)
 
     # Define the flow with conditional edges
     workflow.add_edge(START, "generate_sql")
@@ -134,7 +150,7 @@ def run_agent(question: str, compiled_app=None):
         compiled_app: Pre-compiled LangGraph app (optional, will build if None)
 
     Returns:
-        AgentState dict with query_results, result_columns, generated_sql, viz_type
+        AgentState dict with query_results, result_columns, generated_sql, streamlit_code
     """
     if compiled_app is None:
         compiled_app = build_agent()
@@ -146,7 +162,6 @@ def run_agent(question: str, compiled_app=None):
         "validation_error": "",
         "query_results": [],
         "result_columns": [],
-        "viz_type": "",
         "streamlit_code": "",
         "messages": [],
     }
@@ -171,7 +186,7 @@ def main():
     print(f"\nQuery Results:")
     print(f"Columns: {result.get('result_columns', [])}")
     print(f"Rows: {result.get('query_results', [])}")
-    print(f"\nVisualization type: {result.get('viz_type', 'N/A')}")
+    print(f"\nStreamlit code generated: {len(result.get('streamlit_code', ''))} characters")
 
 
 if __name__ == "__main__":
