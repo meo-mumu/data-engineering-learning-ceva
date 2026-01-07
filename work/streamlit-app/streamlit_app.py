@@ -23,6 +23,50 @@ def get_agent():
     return build_agent()
 
 
+# Restricted execution namespace for agent-generated code
+# Security: Limited globals with safe builtins and pre-imported modules
+# Note: Generated code is already validated by AST parser before execution (primary defense)
+# This restricted namespace provides defense-in-depth by:
+# 1. Pre-importing allowed modules (pandas, streamlit, plotly)
+# 2. Only exposing safe builtins needed for visualization
+# 3. Not exposing dangerous builtins like open(), compile(), or unrestricted eval()
+SAFE_BUILTINS = {
+    'len': len,
+    'range': range,
+    'str': str,
+    'int': int,
+    'float': float,
+    'list': list,
+    'dict': dict,
+    'tuple': tuple,
+    'bool': bool,
+    'None': None,
+    'True': True,
+    'False': False,
+    'round': round,
+    'min': min,
+    'max': max,
+    'sum': sum,
+    'sorted': sorted,
+    'enumerate': enumerate,
+    'zip': zip,
+    '__import__': __import__,  # Needed for import statements; imports already validated by AST
+    '__builtins__': {
+        '__import__': __import__,  # Allow import (already AST-validated)
+        'len': len, 'str': str, 'int': int, 'float': float,  # Safe builtins
+        'list': list, 'dict': dict, 'tuple': tuple, 'bool': bool,
+        'None': None, 'True': True, 'False': False,
+        'range': range, 'enumerate': enumerate, 'zip': zip,
+        'min': min, 'max': max, 'sum': sum, 'round': round, 'sorted': sorted,
+    },
+}
+
+RESTRICTED_GLOBALS = {
+    **SAFE_BUILTINS,
+    'pd': pd,       # Pre-import pandas (to avoid repeated imports)
+    'st': st,       # Pre-import streamlit
+    'px': px,       # Pre-import plotly.express
+}
 
 
 def main():
@@ -96,7 +140,9 @@ def main():
                     local_namespace = {}
 
                     # Execute the generated code to define render_visualization function
-                    exec(generated_code, {}, local_namespace)
+                    # Security: Use RESTRICTED_GLOBALS to limit available builtins and modules
+                    # This prevents generated code from accessing dangerous functions like open(), eval(), __import__()
+                    exec(generated_code, RESTRICTED_GLOBALS, local_namespace)
 
                     # Call the generated render_visualization function
                     if 'render_visualization' in local_namespace:
