@@ -2,23 +2,25 @@
 
 import re
 import ast
-from pathlib import Path
 from typing import TYPE_CHECKING
 from datetime import datetime
 
 if TYPE_CHECKING:
     from ..agent import AgentState
 
-
-# Path to streamlit app
-STREAMLIT_APP_PATH = Path(__file__).parent.parent.parent / "streamlit-app" / "streamlit_app.py"
-START_MARKER = "# START AGENT GENERATED CODE"
-END_MARKER = "# END AGENT GENERATED CODE"
-
 # Safety validation constants
 ALLOWED_IMPORTS = {'pandas', 'pd', 'streamlit', 'st', 'plotly', 'plotly.express', 'px'}
 FORBIDDEN_IMPORTS = {'os', 'sys', 'subprocess', 'eval', 'exec', '__import__', 'open', 'file', 'input', 'requests', 'urllib', 'socket', 'http'}
 FORBIDDEN_FUNCTIONS = ['eval', 'exec', '__import__', 'compile', 'open', 'file', 'input', 'raw_input', 'getattr', 'setattr', 'delattr']
+
+# Forbidden module.method patterns (for ast.Attribute calls)
+FORBIDDEN_METHODS = {
+    'os': ['system', 'popen', 'execl', 'execle', 'execlp', 'execlpe', 'execv', 'execve',
+           'execvp', 'execvpe', 'spawnl', 'spawnle', 'spawnlp', 'spawnlpe', 'spawnv',
+           'spawnve', 'spawnvp', 'spawnvpe'],
+    'subprocess': '*',  # Block all subprocess methods
+    'builtins': ['__import__', 'eval', 'exec', 'compile'],
+}
 
 
 def analyze_data_context(rows: list, columns: list, question: str, sql: str) -> dict:
@@ -187,6 +189,22 @@ def extract_python_code(llm_response: str) -> str:
 def validate_generated_code(code: str) -> tuple[bool, str]:
     """Multi-layer validation for LLM-generated code
 
+    Test Cases - These patterns should be BLOCKED:
+    ✗ eval('malicious_code')                  # Direct forbidden function
+    ✗ exec('malicious_code')                  # Direct forbidden function
+    ✗ __import__('os')                        # Direct forbidden function
+    ✗ open('/etc/passwd')                     # Direct forbidden function
+    ✗ os.system('rm -rf /')                   # Module method call
+    ✗ os.popen('cat /etc/passwd')             # Module method call
+    ✗ os.execv('/bin/sh', [])                 # Module method call
+    ✗ subprocess.run(['rm', '-rf', '/'])      # All subprocess methods blocked
+    ✗ subprocess.Popen(['malicious'])         # All subprocess methods blocked
+    ✗ subprocess.call(['cmd'])                # All subprocess methods blocked
+    ✗ builtins.__import__('os')               # Module method call
+    ✓ pd.DataFrame(rows, columns=columns)     # Allowed (pandas)
+    ✓ st.plotly_chart(fig)                    # Allowed (streamlit)
+    ✓ px.bar(df, x='col1', y='col2')          # Allowed (plotly)
+
     Returns:
         (is_valid: bool, error_message: str)
     """
@@ -218,9 +236,27 @@ def validate_generated_code(code: str) -> tuple[bool, str]:
     # Layer 3: Forbidden function calls
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
+            # Check direct function calls (e.g., eval(), exec())
             if isinstance(node.func, ast.Name):
                 if node.func.id in FORBIDDEN_FUNCTIONS:
                     return False, f"Forbidden function call: {node.func.id}"
+
+            # Check method calls (e.g., os.system(), subprocess.run())
+            elif isinstance(node.func, ast.Attribute):
+                # Get the module/object name (e.g., "os" from os.system)
+                if isinstance(node.func.value, ast.Name):
+                    module_name = node.func.value.id
+                    method_name = node.func.attr
+
+                    # Check if module is in forbidden list
+                    if module_name in FORBIDDEN_METHODS:
+                        forbidden_list = FORBIDDEN_METHODS[module_name]
+                        # If '*', block all methods from this module
+                        if forbidden_list == '*':
+                            return False, f"Forbidden method call: {module_name}.{method_name}"
+                        # Otherwise check specific method names
+                        elif method_name in forbidden_list:
+                            return False, f"Forbidden method call: {module_name}.{method_name}"
 
     # Layer 4: Function signature validation
     has_correct_signature = False
@@ -251,30 +287,6 @@ def generate_safe_table_fallback(columns: list) -> str:
 '''
 
 
-def update_streamlit_app(generated_code: str):
-    """Update streamlit_app.py with generated visualization code"""
-
-    # Read current file
-    with open(STREAMLIT_APP_PATH, "r") as f:
-        content = f.read()
-
-    # Find markers
-    pattern = re.compile(
-        f"{re.escape(START_MARKER)}.*?{re.escape(END_MARKER)}",
-        re.DOTALL
-    )
-
-    # Replace code between markers
-    new_content = pattern.sub(
-        f"{START_MARKER}\n{generated_code}{END_MARKER}",
-        content
-    )
-
-    # Write back
-    with open(STREAMLIT_APP_PATH, "w") as f:
-        f.write(new_content)
-
-
 def create_generate_streamlit_views_node(llm, viz_guidelines: str):
     """Factory function to inject LLM and guidelines dependencies"""
 
@@ -295,15 +307,23 @@ def create_generate_streamlit_views_node(llm, viz_guidelines: str):
         # 3. Build LLM prompt
         prompt = build_visualization_prompt(context, viz_guidelines)
 
-        # 4. Call LLM
+        # 4. Call LLM with timeout handling
         try:
             response = llm.invoke(prompt)
             generated_code = extract_python_code(response.content)
-        except Exception as e:
-            print(f"❌ LLM invocation failed: {e}")
+        except TimeoutError as e:
+            print(f"⏱️  LLM timeout: {e}. Using safe table fallback.")
             generated_code = generate_safe_table_fallback(columns)
             state["streamlit_code"] = generated_code
-            update_streamlit_app(generated_code)
+            return state
+        except Exception as e:
+            error_msg = str(e)
+            if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
+                print(f"⏱️  LLM timeout (caught as general exception): {e}. Using safe table fallback.")
+            else:
+                print(f"❌ LLM invocation failed: {e}. Using safe table fallback.")
+            generated_code = generate_safe_table_fallback(columns)
+            state["streamlit_code"] = generated_code
             return state
 
         # 5. Validate generated code
@@ -316,14 +336,7 @@ def create_generate_streamlit_views_node(llm, viz_guidelines: str):
         else:
             print("✅ Generated code validated")
 
-        # 6. Update streamlit app file
-        try:
-            update_streamlit_app(generated_code)
-            print(f"✅ Updated {STREAMLIT_APP_PATH}")
-        except Exception as e:
-            print(f"❌ Failed to update streamlit app: {e}")
-
-        # 7. Store in state
+        # 6. Store in state (no file writing - Streamlit will execute dynamically)
         state["streamlit_code"] = generated_code
 
         return state

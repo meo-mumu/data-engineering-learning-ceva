@@ -17,7 +17,9 @@ def create_generate_sql_node(llm, agent_specs: str, semantic_layer: str):
         previous_sql = state.get("generated_sql", "")
 
         if validation_error and previous_sql:
-            print(f"🔄 Regenerating SQL (fixing: {validation_error})...")
+            # Increment retry count
+            state["retry_count"] = state.get("retry_count", 0) + 1
+            print(f"🔄 Regenerating SQL (attempt {state['retry_count']}/3, fixing: {validation_error})...")
         else:
             print("🔄 Generating SQL...")
 
@@ -62,9 +64,28 @@ Please fix this error and generate a corrected SQL query.
 Generate ONLY the SQL query needed to answer this question. Return the SQL without any explanation or markdown formatting.
 """
 
-        # Call LLM
-        response = llm.invoke(prompt)
-        generated_text = response.content.strip()
+        # Call LLM with timeout handling
+        try:
+            response = llm.invoke(prompt)
+            generated_text = response.content.strip()
+        except TimeoutError as e:
+            print(f"⏱️  LLM timeout: {e}")
+            state["validation_error"] = "LLM timeout, please retry"
+            state["generated_sql"] = ""
+            state["sql_valid"] = False
+            return state
+        except Exception as e:
+            # Catch other exceptions (network errors, API errors, etc.)
+            error_msg = str(e)
+            if "timeout" in error_msg.lower() or "timed out" in error_msg.lower():
+                print(f"⏱️  LLM timeout (caught as general exception): {e}")
+                state["validation_error"] = "LLM timeout, please retry"
+            else:
+                print(f"❌ LLM invocation failed: {e}")
+                state["validation_error"] = f"LLM error: {error_msg}"
+            state["generated_sql"] = ""
+            state["sql_valid"] = False
+            return state
 
         # Extract SQL (remove markdown formatting if present)
         sql = generated_text

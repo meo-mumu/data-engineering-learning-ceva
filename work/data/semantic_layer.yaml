@@ -179,7 +179,7 @@ semantic_layer:
             COUNT(*) as batch_count,
             SUM(quantity_doses) as total_doses,
             SUM(quantity_units) as total_units
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        FROM fact_batch_production
         GROUP BY bu_source
         ORDER BY bu_source
       view_type: table
@@ -194,8 +194,8 @@ semantic_layer:
             COUNT(*) as batch_count,
             SUM(f.quantity_doses) as total_doses,
             SUM(f.quantity_units) as total_units
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
-        LEFT JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_site.parquet') s ON f.site_fk = s.site_sk
+        FROM fact_batch_production f
+        LEFT JOIN dim_site s ON f.site_fk = s.site_sk
         WHERE s.site_code IS NOT NULL
         GROUP BY s.site_code, s.country, s.region
         ORDER BY batch_count DESC
@@ -208,8 +208,8 @@ semantic_layer:
             p.therapeutic_class,
             COUNT(DISTINCT f.batch_id) as batch_count,
             COUNT(DISTINCT p.product_code) as product_count
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
+        FROM fact_batch_production f
+        JOIN dim_product p ON f.product_fk = p.product_sk
         WHERE p.therapeutic_class IS NOT NULL
         GROUP BY p.therapeutic_class
         ORDER BY batch_count DESC
@@ -222,7 +222,7 @@ semantic_layer:
             batch_status,
             bu_source,
             COUNT(*) as batch_count
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        FROM fact_batch_production
         GROUP BY batch_status, bu_source
         ORDER BY bu_source, batch_count DESC
       view_type: table
@@ -235,10 +235,10 @@ semantic_layer:
             s.animal_type,
             COUNT(DISTINCT f.batch_id) as batch_count,
             COUNT(DISTINCT p.product_code) as product_count
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
+        FROM fact_batch_production f
+        JOIN dim_product p ON f.product_fk = p.product_sk
         CROSS JOIN UNNEST(f.targeted_species) AS t(specie_fk)
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_specie.parquet') s ON t.specie_fk = s.specie_sk
+        JOIN dim_specie s ON t.specie_fk = s.specie_sk
         GROUP BY s.specie_name, s.animal_type
         ORDER BY batch_count DESC
       view_type: chart
@@ -251,10 +251,10 @@ semantic_layer:
             p.category,
             p.form,
             p.therapeutic_class
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f ON p.product_sk = f.product_fk
+        FROM dim_product p
+        JOIN fact_batch_production f ON p.product_sk = f.product_fk
         CROSS JOIN UNNEST(f.targeted_species) AS t(specie_fk)
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_specie.parquet') s ON t.specie_fk = s.specie_sk
+        JOIN dim_specie s ON t.specie_fk = s.specie_sk
         WHERE s.specie_code = 'dog'
         ORDER BY p.product_name
       view_type: table
@@ -269,9 +269,9 @@ semantic_layer:
             f.batch_status,
             s.site_code,
             f.bu_source
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet') f
-        JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet') p ON f.product_fk = p.product_sk
-        LEFT JOIN read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_site.parquet') s ON f.site_fk = s.site_sk
+        FROM fact_batch_production f
+        JOIN dim_product p ON f.product_fk = p.product_sk
+        LEFT JOIN dim_site s ON f.site_fk = s.site_sk
         ORDER BY f.production_date DESC
         LIMIT 20
       view_type: table
@@ -285,7 +285,7 @@ semantic_layer:
             COUNT(*) as batch_count,
             SUM(quantity_doses) as total_doses,
             SUM(quantity_units) as total_units
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        FROM fact_batch_production
         GROUP BY month, bu_source
         ORDER BY month, bu_source
       view_type: chart
@@ -299,7 +299,7 @@ semantic_layer:
             temp_max_c,
             light_sensitive,
             bu_source
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/dim_product.parquet')
+        FROM dim_product
         WHERE temp_max_c <= 8
         ORDER BY temp_min_c
       view_type: table
@@ -311,6 +311,6 @@ semantic_layer:
             COUNT(*) as total_batches,
             SUM(CASE WHEN gmp_deviation = true THEN 1 ELSE 0 END) as batches_with_deviation,
             ROUND(100.0 * SUM(CASE WHEN gmp_deviation = true THEN 1 ELSE 0 END) / COUNT(*), 2) as deviation_rate_pct
-        FROM read_parquet('/home/dieu/repository/data-engineering-learning-ceva/work/data/b-silver-star-schema/fact_batch_production.parquet')
+        FROM fact_batch_production
         WHERE gmp_deviation IS NOT NULL
       view_type: table
