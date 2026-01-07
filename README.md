@@ -36,7 +36,9 @@ The agent specifications, roles, capabilities, and guidelines are in @work/agent
 The agent code is in @work/agent/agent.py
 Techno : LangGraph with HuggingFaceHub integration for agent  
 
-## Streamlit app [TODO]
+## RAG [TODO]
+
+## Streamlit app [DONE]
 The Streamlit app will be in @work/streamlit-app/streamlit_app.py
 The app is a template with features:
 - at the top a text input for user questions
