@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 # Add agent directory to path
-sys.path.insert(0, str(Path(__file__).parent / "agent"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from nodes.generate_sql import create_generate_sql_node
 from nodes.generate_streamlit_views import create_generate_streamlit_views_node, generate_safe_table_fallback

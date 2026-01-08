@@ -5,7 +5,7 @@ from pathlib import Path
 import inspect
 
 # Add agent directory to path
-sys.path.insert(0, str(Path(__file__).parent / "agent"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def test_timeout_constant_exists():

@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 # Add agent directory to path
-sys.path.insert(0, str(Path(__file__).parent / "agent"))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from agent import build_agent, run_agent
 
